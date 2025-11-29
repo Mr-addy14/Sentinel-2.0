@@ -1,8 +1,9 @@
-// Converted from TypeScript to JavaScript — automatic best-effort. Please review.
 import { Button } from "@/components/ui/button";
-import { Shield, Lock, Eye, Zap, Users, ArrowRight, CheckCircle } from "lucide-react";
+import { Shield, Lock, Eye, Zap, Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import sentinelLogo from "@/assets/sentinel-logo.png";
+
+// Placeholder for logo - you'll need to add the actual logo file
+const sentinelLogo = "/sentinel-logo.png";
 
 const Index = () => {
   return (
@@ -18,15 +19,15 @@ const Index = () => {
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
             <div className="mb-8 relative">
-              <img src={sentinelLogo} alt="Sentinel Logo" className="w-32 h-32 animate-float" />
+              <Shield className="w-32 h-32 text-primary animate-float" />
               <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full" />
             </div>
 
-            <h1 className="text-6xl md-7xl font-bold mb-6 animate-fade-in">
+            <h1 className="text-6xl md:text-7xl font-bold mb-6 animate-fade-in">
               <span className="text-gradient-cyber">SENTINEL</span>
             </h1>
 
-            <p className="text-xl md-2xl text-muted-foreground mb-8 max-w-2xl animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl animate-fade-in" style={{ animationDelay: "0.2s" }}>
               Cybersecurity Awareness & Protection Platform for SMEs
             </p>
 
@@ -35,15 +36,15 @@ const Index = () => {
               Implement AI-assisted phishing detection and security monitoring dashboards.
             </p>
 
-            <div className="flex flex-col sm-row gap-4 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               <Link to="/auth">
-                <Button size="lg" className="bg-primary hover-primary/90 text-primary-foreground cyber-glow-strong text-lg px-8 group">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground cyber-glow-strong text-lg px-8 group">
                   Get Started
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover-x-1 transition-transform" />
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link to="/dashboard">
-                <Button size="lg" variant="outline" className="border-primary/50 hover-primary/10 text-lg px-8">
+                <Button size="lg" variant="outline" className="border-primary/50 hover:bg-primary/10 text-lg px-8">
                   View Demo
                 </Button>
               </Link>
@@ -60,54 +61,57 @@ const Index = () => {
             Enterprise-grade security tools designed for small and medium enterprises
           </p>
 
-          <div className="grid grid-cols-1 md-cols-2 lg-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon,
+                icon: Shield,
                 title: "Threat Detection",
                 description: "Real-time monitoring and AI-powered threat detection to protect your business",
                 color: "text-primary"
               },
               {
-                icon,
+                icon: Lock,
                 title: "Encrypted Security",
                 description: "End-to-end encryption for file sharing and secure communications",
                 color: "text-success"
               },
               {
-                icon,
+                icon: Eye,
                 title: "Privacy Analysis",
                 description: "Detect and prevent privacy leaks with advanced scanning technology",
                 color: "text-warning"
               },
               {
-                icon,
+                icon: Zap,
                 title: "AI Firewall",
                 description: "Intelligent firewall that learns and adapts to emerging threats",
                 color: "text-primary"
               },
               {
-                icon,
+                icon: Users,
                 title: "Training & Awareness",
                 description: "Gamified learning platform with quizzes and certifications",
                 color: "text-accent"
               },
               {
-                icon,
+                icon: Shield,
                 title: "Compliance Ready",
                 description: "Meet industry standards with automated security reports",
                 color: "text-success"
               }
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="p-6 rounded-lg bg-card border border-border/50 hover-primary/50 hover-glow transition-all duration-300"
-              >
-                <feature.icon className={`w-12 h-12 mb-4 ${feature.color}`} />
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </div>
-            ))}
+            ].map((feature, i) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={i}
+                  className="p-6 rounded-lg bg-card border border-border/50 hover:border-primary/50 hover:shadow-glow transition-all duration-300"
+                >
+                  <Icon className={`w-12 h-12 mb-4 ${feature.color}`} />
+                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

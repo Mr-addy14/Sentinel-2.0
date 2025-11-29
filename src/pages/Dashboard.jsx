@@ -1,4 +1,3 @@
-// Converted from TypeScript to JavaScript — automatic best-effort. Please review.
 import Sidebar from "@/components/Sidebar";
 import { AlertTriangle, CheckCircle, TrendingUp, Activity, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -28,8 +27,8 @@ const Dashboard = () => {
         </Card>
 
         {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md-cols-2 lg-cols-4 gap-6 mb-8">
-          <Card className="p-6 bg-card/50 border-border/50 hover-glow transition-shadow">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="p-6 bg-card/50 border-border/50 hover:shadow-glow transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-medium text-muted-foreground">Total Threats</h3>
               <AlertTriangle className="w-5 h-5 text-warning" />
@@ -38,7 +37,7 @@ const Dashboard = () => {
             <p className="text-xs text-muted-foreground mt-2">+12 from last scan</p>
           </Card>
 
-          <Card className="p-6 bg-card/50 border-border/50 hover-glow transition-shadow">
+          <Card className="p-6 bg-card/50 border-border/50 hover:shadow-glow transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-medium text-muted-foreground">Blocked Attacks</h3>
               <Shield className="w-5 h-5 text-success" />
@@ -47,7 +46,7 @@ const Dashboard = () => {
             <p className="text-xs text-muted-foreground mt-2">This month</p>
           </Card>
 
-          <Card className="p-6 bg-card/50 border-border/50 hover-glow transition-shadow">
+          <Card className="p-6 bg-card/50 border-border/50 hover:shadow-glow transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-medium text-muted-foreground">Security Score</h3>
               <TrendingUp className="w-5 h-5 text-primary" />
@@ -56,7 +55,7 @@ const Dashboard = () => {
             <Progress value={85} className="mt-2 h-2" />
           </Card>
 
-          <Card className="p-6 bg-card/50 border-border/50 hover-glow transition-shadow">
+          <Card className="p-6 bg-card/50 border-border/50 hover:shadow-glow transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-medium text-muted-foreground">Active Users</h3>
               <Activity className="w-5 h-5 text-primary" />
@@ -74,13 +73,13 @@ const Dashboard = () => {
           </h3>
           <div className="space-y-3">
             {[
-              { task: "Scan Network", xp: "+150 XP", completed },
-              { task: "Complete Phishing Quiz", xp: "+750 XP", completed },
-              { task: "Update Firewall", xp: "+100 XP", completed },
+              { task: "Scan Network", xp: "+150 XP", completed: true },
+              { task: "Complete Phishing Quiz", xp: "+750 XP", completed: false },
+              { task: "Update Firewall", xp: "+100 XP", completed: false },
             ].map((mission, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 border border-border/30 hover-primary/50 transition-colors"
+                className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 border border-border/30 hover:border-primary/50 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
