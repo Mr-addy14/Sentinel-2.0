@@ -3,7 +3,15 @@ import Sidebar from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Send, Bot, User } from "lucide-react";
+import { MessageSquare, Send, Bot, User, Loader2 } from "lucide-react";
+
+// --- API Configuration ---
+// Note: In a production app, you should load this from an environment variable (e.g., process.env.NEXT_PUBLIC_OPENROUTER_KEY)
+// For demonstration, I'm inserting it directly.
+const OPENROUTER_API_KEY = "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";
+const OPENROUTER_MODEL = "openai/gpt-3.5-turbo"; // A commonly used model on OpenRouter
+// --- End API Configuration ---
+
 
 const AIAssistant = () => {
   const [messages, setMessages] = useState([
@@ -13,31 +21,64 @@ const AIAssistant = () => {
     }
   ]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => { // Made function asynchronous
+    if (!input.trim() || isLoading) return;
 
-    // Add user message
+    // 1. Add user message
     const userMessage = { role: "user", content: input };
     setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    setError(null);
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        "That's a great question about cybersecurity. Based on your inquiry, I recommend checking our Learning Hub for detailed tutorials on this topic.",
-        "Security is our top priority. Let me help you understand this better. Would you like me to guide you to the relevant security tool?",
-        "I can help you with that. Here's what you need to know about this security concept...",
-        "Excellent question. For hands-on practice, I suggest trying our Quiz Arena to test your knowledge on this topic."
-      ];
+    try {
+      // 2. Prepare API payload
+      const payload = {
+        model: OPENROUTER_MODEL,
+        messages: [
+          // Add a system message to guide the AI's persona
+          { role: "system", content: "You are Sentinel AI Assistant, a helpful expert in cybersecurity. Keep your responses concise and focused on the topic." },
+          ...messages.slice(1), // Use previous conversation history (excluding the initial welcome message)
+          userMessage // Add the current user message
+        ],
+      };
 
+      // 3. Call OpenRouter API
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API call failed with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const aiResponseContent = data.choices[0].message.content;
+
+      // 4. Add AI response
       const aiMessage = {
         role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)]
+        content: aiResponseContent
       };
       setMessages(prev => [...prev, aiMessage]);
-    }, 1000);
 
-    setInput("");
+    } catch (err) {
+      console.error("OpenRouter API Error:", err);
+      setError("An error occurred while fetching the AI response. Please try again.");
+      
+      // Optionally, add an error message to the chat
+      setMessages(prev => [...prev, { role: "assistant", content: "I encountered an error. Please check the console for details or try a different question." }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const suggestedQuestions = [
@@ -90,9 +131,21 @@ const AIAssistant = () => {
                   )}
                 </div>
               ))}
+
+              {/* Loading indicator */}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="max-w-[80%] p-4 rounded-lg bg-secondary ml-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  </div>
+                </div>
+              )}
             </div>
 
-            {messages.length === 1 && (
+            {messages.length === 1 && !isLoading && (
               <div className="mb-4">
                 <p className="text-sm text-muted-foreground mb-3">Suggested questions:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -108,6 +161,13 @@ const AIAssistant = () => {
                 </div>
               </div>
             )}
+            
+            {/* Error message display */}
+            {error && (
+                <div className="mb-3 text-sm text-red-500 p-2 border border-red-500 rounded-lg bg-red-500/10">
+                    Error: {error}
+                </div>
+            )}
 
             <div className="flex gap-3">
               <Input
@@ -116,13 +176,14 @@ const AIAssistant = () => {
                 onKeyPress={(e) => e.key === "Enter" && handleSend()}
                 placeholder="Ask me anything about cybersecurity..."
                 className="flex-1 bg-input border-border/50 focus:border-primary"
+                disabled={isLoading}
               />
               <Button
                 onClick={handleSend}
-                disabled={!input.trim()}
+                disabled={!input.trim() || isLoading}
                 className="bg-primary hover:bg-primary/90 cyber-glow"
               >
-                <Send className="w-5 h-5" />
+                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </Button>
             </div>
           </Card>
@@ -131,8 +192,7 @@ const AIAssistant = () => {
             <p className="text-sm text-warning-foreground flex items-start gap-2">
               <MessageSquare className="w-4 h-4 mt-0.5" />
               <span>
-                <strong>Note:</strong> This is a simulated AI assistant. For full AI capabilities,
-                enable Lovable Cloud to connect real AI models.
+                <strong>Note:</strong> This assistant is now using the **OpenRouter API** with a real AI model. Remember to use environment variables for your API key in a production environment.
               </span>
             </p>
           </Card>
