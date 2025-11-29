@@ -1,4 +1,3 @@
-// Converted from TypeScript to JavaScript — automatic best-effort. Please review.
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -6,12 +5,14 @@ import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
-    port: 5173, // set default port (you can change this)
+    host: "localhost",
+    port: 5173,
   },
 
   plugins: [
-    react(),
+    react({
+      jsxRuntime: 'automatic'
+    }),
     mode === "development" && componentTagger()
   ].filter(Boolean),
 
@@ -20,4 +21,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  
+  // Ensure proper base path
+  base: "/",
 }));
